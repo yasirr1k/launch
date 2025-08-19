@@ -22,11 +22,10 @@ from reportlab.pdfgen import canvas
 
 
 
-db_path = '/Users/fathemaislam/Documents/CS NEA/Flask Setup/instance/database.db'
-db = SQLAlchemy()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+db_path = os.path.join(os.path.dirname(__file__), "database.db")db = SQLAlchemy()
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'yasir'
 db.init_app(app)
 
