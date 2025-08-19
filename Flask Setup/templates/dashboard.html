@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        /* Styles for the loading overlay */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Welcome to your Dashboard, {{ current_user.username }}!</h1>
+        <p>Select an action below:</p>
+
+        <!-- Dashboard links -->
+        <div class="dashboard-links">
+            <a href="{{ url_for('generate_custom_paper') }}" class="dashboard-btn">Generate New Custom Papers</a>
+            <a href="{{ url_for('generate_random_paper') }}" class="dashboard-btn" id="random-paper-btn">Generate A Random Exam Paper</a>
+            <a href="{{ url_for('generate_intelligen_paper') }}" class="dashboard-btn" id="intelligen-paper-btn">Generate 'Intelligen' Papers</a>
+            <a href="{{ url_for('enter_scores') }}" class="dashboard-btn">Enter Scores for Completed Papers</a>
+            <a href="{{ url_for('view_previous_papers') }}" class="dashboard-btn">View Previously Generated Papers</a>
+            <a href="{{ url_for('exam_mode') }}" class="dashboard-btn">Enter Exam Mode</a>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        // Show loading overlay when generating paper
+        document.getElementById("random-paper-btn").addEventListener("click", function(event) {
+            event.preventDefault();
+            document.getElementById("loading-overlay").style.display = "flex";
+            window.location.href = "{{ url_for('generate_random_paper') }}";
+        });
+
+        document.getElementById("intelligen-paper-btn").addEventListener("click", function(event) {
+            event.preventDefault();
+            document.getElementById("loading-overlay").style.display = "flex";
+            window.location.href = "{{ url_for('generate_intelligen_paper') }}";
+        });
+    </script>
+</body>
+
+</html>

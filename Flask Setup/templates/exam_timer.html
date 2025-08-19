@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Exam Timer - STEP Gen{% endblock %}
+
+{% block content %}
+    <h1>Exam Mode</h1>
+    <p>Click start when you're ready to begin <strong>{{ paper_name }}</strong>.</p>
+
+    <button id="start-btn">Start Exam</button>
+    <h2 id="timer" style="display: none;"></h2>
+    <p id="warning" style="color: red; display: none;">You attempted to leave the exam mode!</p>
+
+    <script>
+        let timeRemaining = {{ time_allowed }};
+        let timerInterval;
+        let warningCount = 0;
+
+        function startExam() {
+            document.getElementById("start-btn").style.display = "none";
+            document.getElementById("timer").style.display = "block";
+            document.getElementById("warning").style.display = "none";
+
+            // Request full-screen mode
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            }
+
+            function updateTimer() {
+                let minutes = Math.floor(timeRemaining / 60);
+                let seconds = timeRemaining % 60;
+                document.getElementById("timer").innerText = `Time Remaining: ${minutes}m ${seconds}s`;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Time's up! Redirecting to dashboard in 10 seconds...");
+                    
+                    let countdown = 10;
+                    document.getElementById("timer").innerText = `Redirecting in ${countdown}s`;
+
+                    let redirectInterval = setInterval(() => {
+                        countdown--;
+                        document.getElementById("timer").innerText = `Redirecting in ${countdown}s`;
+                        if (countdown <= 0) {
+                            clearInterval(redirectInterval);
+                            window.location.href = "{{ url_for('dashboard') }}";
+                        }
+                    }, 1000);
+                } else {
+                    timeRemaining--;
+                }
+            }
+
+            updateTimer();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        document.getElementById("start-btn").addEventListener("click", startExam);
+
+        // Prevent right-click
+        document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+        // Prevent F12, Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+Shift+J, Ctrl+U
+        document.addEventListener("keydown", (event) => {
+            if (
+                event.key === "F12" ||
+                (event.ctrlKey && event.shiftKey && (event.key === "I" || event.key === "C" || event.key === "J")) ||
+                (event.ctrlKey && event.key === "U")
+            ) {
+                event.preventDefault();
+            }
+        });
+
+        // Detect if the user tries to switch tabs or minimise the window
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) {
+                warningCount++;
+                document.getElementById("warning").style.display = "block";
+                document.getElementById("warning").innerText = `Warning ${warningCount}: Do not leave the exam mode! After 3 warnings the exam will end and you will be redirected to dashboard.`;
+                
+                if (warningCount > 3) {
+                    alert("You have attempted to leave too many times. The exam will now end.");
+                    window.location.href = "{{ url_for('dashboard') }}";
+                    
+                }
+            }
+        });
+
+        // Detect if the user exits full-screen
+        document.addEventListener("fullscreenchange", function () {
+            if (!document.fullscreenElement) {
+                warningCount++;
+                document.getElementById("warning").style.display = "block";
+                document.getElementById("warning").innerText = `Warning ${warningCount}: Stay in full-screen mode! After 3 warnings the exam will end and you will be redirected to dashboard.`;
+                
+                if (warningCount > 3) {
+                    alert("You have attempted to exit full-screen too many times. The exam will now end.");
+                    window.location.href = "{{ url_for('dashboard') }}";
+
+                }
+            }
+        });
+    </script>
+{% endblock %}

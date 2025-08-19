@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Generate Custom Paper{% endblock %}
+
+{% block content %}
+    <h1>Generate Custom Paper</h1>
+
+    <!--  Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- paper name  -->
+    <form method="POST" action="{{ url_for('view_questions') }}">
+        <label for="paper_name">Paper Name:</label>
+        <input type="text" name="paper_name" id="paper_name" value="{{ paper_name }}" required>
+
+        <!-- topic selection  -->
+        <fieldset>
+            <legend>Select Topics</legend>
+            <div class="dashboard-checkbox-container" id="topic-list">
+                {% for topic in topics %}
+                    <label class="topic-item">
+                        <input type="checkbox" name="selected_topics" value="{{ topic.topic_id }}"
+                               {% if topic.checked %}checked{% endif %}>
+                        {{ topic.topic_name }}
+                    </label>
+                {% endfor %}
+            </div> 
+        </fieldset>
+
+        <button type="submit">View Questions</button>
+    </form>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

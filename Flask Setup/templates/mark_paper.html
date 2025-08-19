@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Mark Paper{% endblock %}
+
+{% block content %}
+
+
+
+    <h1>Mark Paper</h1>
+    <form method="POST">
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Question Number</th>
+                    <th>Question Reference</th>
+                    <th>Enter Score (0-20)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question_number, question_ref in questions %}
+                <tr>
+                    <td>{{ question_number }}</td>
+                    <td>{{ question_ref }}</td>
+                    <td><input type="number" name="score_{{ question_number }}" min="0" max="20" step="1" required></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit">Submit Scores</button>
+    </form>
+{% endblock %}
+{% block footer %}
+
+{% endblock %}
+

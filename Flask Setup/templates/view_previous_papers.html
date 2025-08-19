@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}View Previous Papers - STEP Gen{% endblock %}
+
+{% block content %}
+    <h1><u>View Your Previous Papers</u></h1>
+
+    {% if papers %}
+        {% for paper in papers %}
+            <div class="paper">
+                <h2>{{ paper.paper_name }}</h2>
+                <p><strong>Score:</strong> {{ paper.paper_score }}</p>
+
+                <h3>Questions:</h3>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Question Reference</th>
+                            <th>Topic</th>
+                            <th>Type</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for question in paper.questions %}
+                        <tr>
+                            <td>{{ question.question_ref }}</td>
+                            <td>{{ question.topic }}</td>
+                            <td>{{ question.type }}</td>
+                            <td>{{ question.score }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="buttons">
+                    <form method="post" action="{{ url_for('view_previous_papers') }}">
+                        <input type="hidden" name="paper_id" value="{{ paper.paper_id }}">
+                        <button type="submit" name="view_paper_markscheme" class="btn btn-primary">
+                            View Paper & Markscheme
+                        </button>
+                    </form>
+                    
+
+                    <form action="{{ url_for('forget_paper', paper_id=paper.paper_id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this paper?');">
+                        <button type="submit" class="delete-btn">Forget Paper</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>You have not generated any papers yet.</p>
+    {% endif %}
+{% endblock %}
+{% block footer %}
+
+{% endblock %}
+

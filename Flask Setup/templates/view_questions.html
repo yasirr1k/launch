@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}View Questions{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="paper-title"><u>{{ paper_name }}</u></h1> 
+
+        <!-- Display selected topics and their questions -->
+        <form action="{{ url_for('generate_custompaper') }}" method="POST" class="generate-paper-form">
+      
+            <input type="hidden" name="paper_name" value="{{ paper_name }}">
+
+            {% for topic_name, questions_list in questions.items() %}
+                <div class="topic-section">
+                    <h2 class="topic-name">{{ topic_name }}</h2> 
+                    <ul class="question-list">
+                        {% for question in questions_list %}
+                            <li class="question-item">
+                                <p><strong>Question Ref:</strong> {{ question.question_ref }}</p>
+                                <p><strong>Question Type:</strong> {{ question.type_name }}</p>
+                                <!--  link to View PDF of the question -->
+                                <a href="{{ url_for('view_question', question_ref=question.question_ref) }}" target="_blank">
+                                    View Question
+                                </a>
+                                <!-- checkbox for selection -->
+                                <label>
+                                    <input type="checkbox" name="selected_questions" value="{{ question.question_ref }}"> Select Question
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+
+            <!-- Button to generate paper -->
+            <button type="submit" class="btn">Generate Paper</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block styles %}
+    <style>
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .paper-title {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            text-decoration: underline;  /* Underline the paper name */
+            padding-bottom: 10px;
+        }
+
+        .topic-section {
+            margin-bottom: 30px;
+        }
+
+        .topic-name {
+            font-size: 1.5em;
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+
+        .question-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .question-item {
+            background-color: #ecf0f1;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-item p {
+            margin: 5px 0;
+        }
+
+        .question-item label {
+            font-size: 1.1em;
+        }
+
+        .generate-paper-form {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background-color: #2980b9;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #3498db;
+        }
+    </style>
+{% endblock %}

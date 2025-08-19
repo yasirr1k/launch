@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opening PDFs...</title>
+    <style>
+        /* Styles for the loading overlay */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        // Use javascript to open the PDFs in new tabs
+        window.onload = function() {
+            // Show loading overlay
+            document.getElementById("loading-overlay").style.display = "flex";
+
+            // Generate the urls for the paper and mark scheme based on Flask routes
+            var paperUrl = "{{ url_for('serve_pdf', pdf_filename=pdf_filename) }}";
+            var markschemeUrl = "{{ url_for('serve_pdf', pdf_filename=markscheme_filename) }}";
+
+            // Open the paper PDF in a new tab
+            var paperTab = window.open(paperUrl, '_blank');
+            
+            // Open the mark scheme PDF in a new tab
+            var markschemeTab = window.open(markschemeUrl, '_blank');
+
+            // Check if the tabs were successfully opened
+            if (paperTab && markschemeTab) {
+                // Redirect to the dashboard immediately
+                window.location.href = "{{ url_for('dashboard') }}";
+            } else {
+                alert("The PDFs could not be opened. Please check your browser settings.");
+            }
+        };
+    </script>
+</head>
+<body>
+    <!-- Loading overlay -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+    
+    <h2>Your paper and mark scheme are being opened in new tabs...</h2>
+</body>
+</html>

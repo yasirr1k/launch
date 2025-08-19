@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Exam Mode - STEP Gen{% endblock %}
+
+{% block content %}
+    <h1>Enter Exam Mode</h1>
+    <p>Select a paper to start your exam.</p>
+
+    {% if papers %}
+        <form method="POST" action="{{ url_for('exam_mode') }}">
+            <label for="selected_paper">Choose a paper:</label>
+            <select name="selected_paper" required>
+                {% for paper in papers %}
+                    <option value="{{ paper[0] }}">{{ paper[1] }}</option>
+                {% endfor %}
+            </select>
+            <br><br>
+            <button type="submit">Start Exam</button>
+        </form>
+    {% else %}
+        <p>No available papers. Please create a custom or random paper first.</p>
+        <a href="{{ url_for('dashboard') }}"><button>Back to Dashboard</button></a>
+    {% endif %}
+{% endblock %}

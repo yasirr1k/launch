@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generating Paper</title>
+    <script>
+        // Function to open the PDF in a new tab
+        function openPDF() {
+            // The PDF URL passed from Flask
+            var pdfPath = "{{ pdf_path }}";
+            
+            // Open the PDF in a new tab
+            window.open(pdfPath, '_blank');
+            
+            // Redirect to the dashboard after a short delay
+            setTimeout(function() {
+                window.location.href = "{{ redirect_url }}";  
+            }, 3000);  
+        }
+
+        // Wait for the document to be ready
+        window.onload = function() {
+            openPDF();
+        }
+    </script>
+</head>
+<body>
+    <p>Generating your paper. Please wait...</p>
+</body>
+</html>

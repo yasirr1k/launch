@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - STEP Gen{% endblock %}
+
+{% block content %}
+    {% if current_user.is_authenticated %}
+        <h1>Welcome back, {{ current_user.username }}!</h1>
+        <p>Thank you for returning to STEP Gen, lets smash the STEP exam and get into our dream university!</p>
+        
+    
+        <section>
+            <h2>About STEP Gen</h2>
+            <p>STEP Gen is a platform designed to help you generate and customise STEP papers with a whole bunch of different topics
+                 and questions from past papers. You can create custom papers, generate random or 'Intelligen' papers, each off which will
+                 get you one 'step' closer to that university offer!</p>
+        </section>
+        
+ 
+        <section>
+            <h2>How to Use STEP Gen</h2>
+            <p>To get started, head to your <strong>Dashboard</strong> where you can generate new papers, enter scores, view previous papers, and more.
+                To use our 'Intelligen' feature, make sure to input your scores for completed papers so we can generate papers that are tailored to your needs.
+                 This is your personalised hub to manage your learning journey and help you tackle STEP topics that you
+                 find difficult.</p>
+        </section>
+        
+        <!--Dashboard redirect -->
+        <p>Head to your <a href="{{ url_for('dashboard') }}">Dashboard</a> to get started!</p>
+
+    {% else %}
+        <h1>Welcome to STEP Gen!</h1>
+        <p>This is your learning platform to get, step by step, closer to that dream university.</p>
+        <a href="{{ url_for('login') }}">Login</a> |
+        <a href="{{ url_for('register') }}">Register</a>
+    {% endif %}
+{% endblock %}
